@@ -1,0 +1,143 @@
+#define MAX_CLANS 		(500)
+new TOTALCLANS;
+enum _clans {
+	cID,
+	cName[30],
+	cLeader[MAX_PLAYER_NAME],
+	cRang1[16],
+	cRang2[16],
+	cRang3[16],
+	cRang4[16],
+	cRang5[16]
+}
+new CI[MAX_CLANS][_clans];
+// create clan
+stock CreateClan(playerid, owner[], cname[], r1[], r2[], r3[], r4[], r5[]){
+	str[0] = EOS;
+	format(str, sizeof(str), "INSERT INTO `clans_db`(`Name`, `Owner`, `Rang1`, `Rang2`, `Rang3`, `Rang4`, `Rang5`) VALUES \
+						      ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", cname, owner, r1, r2, r3, r4, r5);
+	mysql_tquery(MySQL, str, "", "");
+	UI[playerid][uClan] = TOTALCLANS;
+	UI[playerid][uClanRang] = 5; // leader
+	return 1;
+}
+// dialogs
+case 15:{
+      if(!response) return 1;
+      if(isnull(inputtext)) return cmd_mm(playerid);
+      if(5 > strlen(inputtext) > 30) return cmd_mm(playerid);
+      TOTALCLANS++;
+    strmid(CI[TOTALCLANS][cName], inputtext, 0, strlen(inputtext));
+    ShowPlayerDialog(playerid, 17, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг1\"\n\
+                                            {cc5156}Например: Новичек", "Ввод", "Отмена");
+  }
+  case 17:{
+      if(!response) TOTALCLANS--;
+    if(isnull(inputtext)) return ShowPlayerDialog(playerid, 17, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг1\"\n\
+                                                                 {cc5156}Например: Новичек", "Ввод", "Отмена");
+    if(5 > strlen(inputtext) > 16) return ShowPlayerDialog(playerid, 17, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг1\"\n\
+                                                              {cc5156}Например: Новичек", "Ввод", "Отмена");
+    strmid(CI[TOTALCLANS][cRang1], inputtext, 0, strlen(inputtext));
+    ShowPlayerDialog(playerid, 18, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг2\"\n\
+                                            {cc5156}Например: Старейшина", "Ввод", "Отмена");
+  }
+  case 18:{
+      if(!response) TOTALCLANS--;
+    if(isnull(inputtext)) return ShowPlayerDialog(playerid, 18, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг2\"\n\
+                                                                 {cc5156}Например: Старейшина", "Ввод", "Отмена");
+    if(5 > strlen(inputtext) > 16) return ShowPlayerDialog(playerid, 18, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг2\"\n\
+                                                              {cc5156}Например: Старейшина", "Ввод", "Отмена");
+    strmid(CI[TOTALCLANS][cRang2], inputtext, 0, strlen(inputtext));
+    ShowPlayerDialog(playerid, 19, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг3\"\n\
+                                            {cc5156}Например: Помощник зама", "Ввод", "Отмена");
+  }
+  case 19:{
+    if(!response) TOTALCLANS--;
+    if(isnull(inputtext)) return ShowPlayerDialog(playerid, 19, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг3\"\n\
+                                                                 {cc5156}Например: Помощник зама", "Ввод", "Отмена");
+    if(5 > strlen(inputtext) > 16) return ShowPlayerDialog(playerid, 19, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг3\"\n\
+                                                              {cc5156}Например: Помощник зама", "Ввод", "Отмена");
+    strmid(CI[TOTALCLANS][cRang3], inputtext, 0, strlen(inputtext));
+    ShowPlayerDialog(playerid, 20, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг4\"\n\
+                                            {cc5156}Например: Заместитель", "Ввод", "Отмена");
+  }
+  case 20:{
+          if(!response) TOTALCLANS--;
+    if(isnull(inputtext)) return ShowPlayerDialog(playerid, 20, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг4\"\n\
+                                            {cc5156}Например: Заместитель", "Ввод", "Отмена");
+    if(5 > strlen(inputtext) > 16) return ShowPlayerDialog(playerid, 20, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг4\"\n\
+                                            {cc5156}Например: Заместитель", "Ввод", "Отмена");
+    strmid(CI[TOTALCLANS][cRang4], inputtext, 0, strlen(inputtext));
+    ShowPlayerDialog(playerid, 21, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг5\"\n\
+                                            {cc5156}Например: Лидер", "Ввод", "Отмена");
+  }
+  case 21:{
+      if(!response) TOTALCLANS--;
+      if(isnull(inputtext)) return ShowPlayerDialog(playerid, 21, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг5\"\n\
+                                            {cc5156}Например: Лидер", "Ввод", "Отмена");
+    if(5 > strlen(inputtext) > 16) return ShowPlayerDialog(playerid, 21, DIALOG_STYLE_INPUT, "{cc5156}Название ранга", "{ffffff}Введите название \"ранг5\"\n\
+                                            {cc5156}Например: Лидер", "Ввод", "Отмена");
+    strmid(CI[TOTALCLANS][cRang5], inputtext, 0, strlen(inputtext));
+    GivePlayerMoneyEx(playerid, -1000000);
+    //CreateClan(playerid, owner[], cname[], r1[], r2[], r3[], r4[], r5[])
+    CreateClan(playerid, UI[playerid][uName], CI[TOTALCLANS][cName], CI[TOTALCLANS][cRang1], CI[TOTALCLANS][cRang2], CI[TOTALCLANS][cRang3], CI[TOTALCLANS][cRang4], CI[TOTALCLANS][cRang5]);
+  }
+  case 22:{
+    if(!response) return 1;
+    switch(listitem){
+        case 0: {
+            ShowPlayerDialog(playerid, 23, DIALOG_STYLE_LIST, "{ffffff}", "Изменить название клана\n", "Выбрать", "Отмена");
+      }
+        case 1: {
+            str[0] = EOS;
+            format(str, sizeof(str), "%s\n\
+                      %s\n\
+                      %s\n\
+                      %s\n\
+                      %s",
+                      CI[UI[playerid][uClan]][cRang1],
+                      CI[UI[playerid][uClan]][cRang2],
+                      CI[UI[playerid][uClan]][cRang3],
+                      CI[UI[playerid][uClan]][cRang4],
+                      CI[UI[playerid][uClan]][cRang5]);
+        ShowPlayerDialog(playerid, 24, DIALOG_STYLE_LIST, "{ffffff}", str, "Выбрать", "Отмена");
+      }
+    }
+  }
+  case 23:{
+      if(!response) return 1;
+      switch(listitem){
+      case 0:{ShowPlayerDialog(playerid, 25, DIALOG_STYLE_INPUT, "{ffffff}", "{ffffff}Введите новое название клана", "ОК", "Отмена");}
+    }
+  }
+  case 24:{}
+  case 25:{
+      if(!response) return 1;
+    str[0] = EOS;
+    if(isnull(inputtext)) return ShowPlayerDialog(playerid, 25, DIALOG_STYLE_INPUT, "{ffffff}", "{ffffff}Введите новое название клана", "ОК", "Отмена");
+    if(5 > strlen(inputtext) > 30) return ShowPlayerDialog(playerid, 25, DIALOG_STYLE_INPUT, "{ffffff}", "{ffffff}Введите новое название клана", "ОК", "Отмена");
+    strmid(CI[UI[playerid][uClan]][cName], inputtext, 0, strlen(inputtext));
+    format(str, sizeof(str), "UPDATE `clans_db` SET `Name` = '%s' WHERE `ID` = '%d'", inputtext, UI[playerid][uClan]);
+    mysql_tquery(MySQL, str, "", "");
+  }
+  case 27:{
+      SelectItem[playerid] = listitem+1;
+      ShowPlayerDialog(playerid, 28, DIALOG_STYLE_INPUT, "{CC5156}Кол-во", "{ffffff}Введите кол-во предмета", "ОК", "Отмена");
+  }
+  case 28:{
+    if(isnull(inputtext)) return ShowPlayerDialog(playerid, 10, DIALOG_STYLE_INPUT, "{CC5156}Кол-во", "{ffffff}Введите кол-во предмета", "ОК", "Отмена");
+    if(1 > strval(inputtext) > 100) return ShowPlayerDialog(playerid, 10, DIALOG_STYLE_INPUT, "{CC5156}Кол-во", "{ffffff}Введите кол-во предмета", "ОК", "Отмена");
+    LootInfo[TOTALLOOT][lAmmount] = strval(inputtext);
+    new Float:iPos[3];
+    EditLoot[playerid] = true;
+      GetPlayerPos(playerid, iPos[0], iPos[1], iPos[2]);
+    LootInfo[TOTALLOOT][lObject] = CreateObject(iInfo[SelectItem[playerid]][iObject], iPos[0]+5, iPos[1], iPos[2], 0, 0, 0);
+    EditObject(playerid, LootInfo[TOTALLOOT][lObject]);
+  }
+  // for leaders
+  CMD:cpanel(playerid){
+	if(UI[playerid][uClanRang] != 5) return 0;
+	ShowPlayerDialog(playerid, 22, DIALOG_STYLE_LIST, "{cc5156}Управление кланом", "Настройка клана\nРанги", "ОК", "Отмена");
+	return 1;
+  }
+  // load 
